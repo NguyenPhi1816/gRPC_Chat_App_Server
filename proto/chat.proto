@@ -1,0 +1,121 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+package chatPackage;
+
+service Chat {
+  rpc Register(RegisterRequest) returns (RegisterResponse) {};
+  rpc ChatInitiate(InitiateRequest) returns (InitiateResponse) {};
+  rpc SendMessage(MessageRequest) returns (google.protobuf.Empty) {};
+  rpc createRoom(RoomRequest) returns (RoomResponse) {};
+  rpc RoomStream(RoomStreamRequest) returns (stream RoomStreamResponse) {};
+  rpc UserStream(StreamRequest) returns (stream UserStreamResponse) {};
+  rpc AllUserStream (AllUserRequest) returns (stream UserStreamResponse) {};
+  rpc ChatStream(StreamRequest) returns (stream StreamMessage) {};
+  rpc LogOut(LogOutRequest) returns (google.protobuf.Empty) {};
+
+}
+
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+  string name = 3;
+  string avatar_url = 4;
+}
+
+message RegisterResponse {
+  int32 id = 1;
+}
+
+message InitiateRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message InitiateResponse {
+  User user = 1;
+}
+
+message MessageRequest {
+  int32 sender_id = 1;
+  int32 room_id = 2;
+  string message = 3;
+}
+
+enum Status {
+  UNKOWN = 0;
+  ONLINE = 1;
+  OFFLINE = 2;
+}
+
+enum Role {
+  ADMIN = 0;
+  USER = 1;
+}
+
+message User {
+  int32 id = 1;
+  string name = 2;
+  Status status = 3;
+  string avatar = 4;
+  Role role = 5;
+}
+
+message Account {
+  int32 user_id = 1;
+  string username = 2;
+  string password = 3;
+}
+
+message UserStreamResponse {
+  repeated User users = 1;
+}
+
+
+message StreamRequest {
+  int32 user_id = 1;
+  int32 room_id = 2;
+}
+
+message AllUserRequest {
+  int32 user_id = 1;
+}
+
+message LogOutRequest {
+  int32 user_id = 1;
+}
+
+message StreamMessage {
+  int32 sender_id = 1;
+  string sender_name = 2;
+  string sender_avatar = 3;
+  string message = 4;
+  int64 createdAt = 5;
+  int32 room_id = 6;
+}
+
+message Room {
+  int32 id = 1;
+  string imageUrl = 2;
+  string name = 3;
+  string description = 4;
+}
+
+message RoomRequest {
+  int32 user_id = 1;
+  string imageUrl = 2;
+  string name = 3;
+  string description = 4;
+}
+
+message RoomResponse {
+  int32 id = 1;
+}
+
+message RoomStreamRequest {
+  int32 user_id = 1;
+}
+
+message RoomStreamResponse {
+  repeated Room rooms = 1;
+}
